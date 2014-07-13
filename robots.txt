@@ -1,7 +1,0 @@
-Sitemap: http://www.perette.info/sitemap.xml
-User-Agent: *
-Disallow: /css
-Disallow: /img
-Disallow: /js
-Disallow: /module
-Disallow: /private
