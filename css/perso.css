@@ -1,0 +1,201 @@
+/*body{background:url(img/background.png) 50% 50%;margin:0;padding:0;}*/
+body{
+	background:url("http://tympanus.net/Tutorials/CustomLoginFormStyling/images/wood_pattern.jpg") #E1C192;
+}
+#main {
+	background:#FFFFFF;
+	border-bottom:0px solid #DDDDDD;
+	border-left:1px solid #DDDDDD;
+	border-right:1px solid #DDDDDD;
+	border-top:0px solid #DDDDDD;
+	margin:0 auto;
+}
+.w150em{width:1.5em;}
+
+#header {
+	text-align:center;
+	width:100%;
+}
+#header h1 img{
+	width:5em;
+	vertical-align:middle;
+}
+
+#contenu {
+	width:85%;
+	float:right;
+	background-color:#F1F1F1;
+}
+
+#menu {
+	background-color:#F1F1F1;
+	border-right: 1px solid #DDDDDD;
+	margin: 1.4em 0 1em;
+	padding: 0.75em;
+	float:left;
+	width:15%;
+}
+
+#menu ul {
+	list-style:none outside none;
+	margin:0;
+	overflow:hidden;
+	padding:0;
+}
+
+#menu li {
+	margin:0 0.75em 0 0;
+}
+
+#menu a {
+	color:#000000;
+	text-decoration:none;
+}
+
+#menu a:hover {
+	color: #2050C0;
+	text-decoration:underline;
+}
+
+#commentaire {
+	border-top: 1px solid #DDDDDD;
+	margin:1em 0 0.5em 0;
+	padding:0.5em 1em 0 1em;
+}
+
+#commentaire h2 {
+	font-size:1em;
+}
+
+#footer { 
+	border-top: 1px solid #DDDDDD;
+	color: #666666;
+	font-size: 0.75em;
+	padding: 1em 0px 0px;
+}
+
+#pagination {
+	padding:1em;
+	text-align:center;
+	background-color:#FFF;
+}
+#pagination a {
+	line-height:30px;
+	transition:all 0.1s cubic-bezier(0.25, 0.1, 0.25, 1) 0;
+	border-bottom:3px solid #999999;
+	color:#444444;
+	display:inline-block;
+	text-align:center;
+	text-decoration:none;
+	background:#F1F1F1;
+	padding:0px 10px;
+}
+#pagination a:hover {
+	border-bottom-color:#52A0A7;
+	color:#52A0A7;
+}
+
+form textarea {
+	width:100%;
+}
+
+
+/* general styles for all note divs */
+span.info,span.important,span.alert,span.tip,span.help,span.todo,span.download,
+div.info,div.important,div.alert,div.tip,div.help,div.todo,div.download {
+    padding: 1em 1em .5em 70px;
+    margin:1.5em auto;
+    min-height: 68px;
+    background-position: 10px 50%;
+    background-repeat: no-repeat;
+    color: #000;
+    overflow: hidden;
+	width:50%;
+
+    border-radius: 4px;
+    color: #7e7975;
+    box-shadow:
+		0 2px 2px rgba(0,0,0,0.2),
+		0 1px 5px rgba(0,0,0,0.2),
+		0 0 0 5px rgba(255,255,255,0.4);
+}
+div.info,span.info { background-color: #d1d7df; background-image: url(img/info.png); }
+div.important,span.important { background-color: #ffd39f; background-image: url(img/important.png); }
+div.alert,span.alert { background-color: #ffbcaf; background-image: url(img/alert.png); }
+div.tip,span.tip { background-color: #fff79f; background-image: url(img/tip.png); }
+div.help,span.help { background-color: #dcc2ef; background-image: url(img/help.png); }
+div.todo,span.todo { background-color: #c2efdd; background-image: url(img/todo.png); }
+div.download,span.download { background-color: #d6efc2; background-image: url(img/download.png); }
+
+.danger {
+    background-color: #c00;
+    color: #fff;
+}
+.warning {
+    background-color: #f60;
+    color: #000;
+}
+.caution {
+    background-color: #ff0;
+    color: #000;
+}
+.notice {
+    background-color: #06f;
+    color: #fff;
+}
+.safety {
+    background-color: #090;
+    color: #fff;
+}
+
+.button{
+	height: 30px;
+	padding: 3px 8px;
+	background: -o-linear-gradient(top, #FFFFFF 0px, #F3F3F3 89%, #F9F9F9 100%) transparent;
+	border: 1px solid #999999;
+	border-radius: 2px;
+	box-shadow: 1px 1px 3px #CCCCCC;
+	color: black !important;
+	cursor: pointer;
+	float: left;
+	font-size: 0.88em;
+	margin-right: 3px;
+	position: relative;
+	white-space: nowrap;
+	vertical-align: middle;
+	font-family: inherit;
+	box-sizing: border-box;
+	text-decoration: none;
+}
+
+.button:hover {
+	background: -o-linear-gradient(top, #F3F3F3 0px, #E2E2E2 89%, #F4F4F4 100%) transparent;
+	border: 1px solid #666666;
+	box-shadow: 1px 1px 3px #999999;
+	text-decoration: none;
+}
+
+table tbody tr:hover td{
+	background: #d0dafd;
+}
+
+
+#fond_detail {
+	background-color:#000000;
+	left:0px;
+	opacity:0.5;
+	position:absolute;
+	top:0px;
+	width:100%;
+}
+#apercu_details {
+	background-color:white;
+	margin:auto 10%;
+	width:80%;
+	padding:1em;
+	position:absolute;
+}
+
+
+
+

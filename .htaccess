@@ -1,0 +1,83 @@
+SetEnv SESSION_USE_TRANS_SID 0
+SetEnv PHP_VER 5
+SetEnv REGISTER_GLOBALS 0
+SetEnv ZEND_OPTIMIZER 1
+SetEnv MAGIC_QUOTES 0
+
+Options All +FollowSymLinks -Indexes
+RewriteEngine On
+RewriteBase /infomage/ripmeal/v3.00
+
+# Passage en https toutes les urls
+RewriteCond %{SERVER_PORT} !^443$
+RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [QSA,R=301,L]
+
+RewriteRule .*(swf/[^/]*\.swf)$ $1 [QSA,L]
+RewriteCond %{REQUEST_URI} ^module
+RewriteRule .*(css/[^/]*\.css)$ $1 [QSA,L]
+RewriteCond %{REQUEST_URI} ^module
+RewriteRule .*(js/[^/]*\.js)$ $1 [QSA,L]
+RewriteCond %{REQUEST_URI} ^module
+RewriteRule .*(img/[^/]*\.(png|png|ico))$ $1 [QSA,L]
+
+RewriteRule ^js-([a-zA-Z]+)-([a-zA-Z]+\.js) module/$1/js/$2 [QSA,L]
+RewriteRule ^css-([a-zA-Z]+)-([a-zA-Z]+\.css) module/$1/css/$2 [QSA,L]
+RewriteRule ^img-([a-zA-Z]+)-([a-zA-Z]+\.(png|png|ico)) module/$1/img/$2 [QSA,L]
+RewriteRule images/([^/]*\.*)$ img/$1 [QSA,L]
+RewriteRule ^api-([a-zA-Z]+)-([a-zA-Z]+)$ api.php?menu=$1&categorie=$2 [QSA,L]
+RewriteRule ^api-([a-zA-Z]+)-([a-zA-Z]+)-([a-zA-Z\_\-\.\+0-9]+)[-.*]*$ api.php?menu=$1&categorie=$2&idPublic=$3 [QSA,L]
+RewriteRule ^private-([a-zA-Z]+)-([a-zA-Z]+)-([a-zA-Z_]+)\.html module/$1/private/$2/$3.php [QSA,L]
+RewriteRule ^([a-zA-Z]+)-([a-zA-Z]+)-([a-zA-Z\_\-\.\+0-9]+)[-.*]* ?menu=$1&categorie=$2&idPublic=$3 [QSA,L]
+RewriteRule ^([a-zA-Z]+)-([a-zA-Z]+)[-.*]* ?menu=$1&categorie=$2 [QSA,L]
+RewriteRule ^([a-zA-Z]+)-([0-9]+)[-.*]* ?menu=$1&idPublic=$2 [QSA,L]
+RewriteRule ^robots.txt$ robots.txt [QSA,L]
+RewriteRule ^sitemap.xml$ sitemap.xml [QSA,L]
+RewriteRule ^example.html$ example.html [QSA,L]
+RewriteRule ^([a-zA-Z]*)$ index.php?menu=$1 [QSA,L]
+
+SetOutputFilter DEFLATE
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4\.0678 no-gzip
+BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
+Header append Vary User-Agent env=!dont-vary
+
+<IfModule mod_expires.c>
+	ExpiresActive On
+	ExpiresDefault "access plus 7200 seconds"
+	ExpiresByType image/jpg 			"access plus 1 week"
+	ExpiresByType image/jpeg 			"access plus 1 week"
+	ExpiresByType image/png 			"access plus 1 week"
+	ExpiresByType image/gif 			"access plus 1 week"
+	AddType image/x-icon .ico
+	ExpiresByType image/ico 			"access plus 1 week"
+	ExpiresByType image/icon 			"access plus 1 week"
+	ExpiresByType image/x-icon 			"access plus 1 week"
+	ExpiresByType text/css 				"access plus 1 week"
+	ExpiresByType text/javascript 		"access plus 1 week"
+	ExpiresByType text/html 			"access plus 7200 seconds"
+	ExpiresByType application/xhtml+xml 	"access plus 7200 seconds"
+	ExpiresByType application/javascript 	"access plus 1 week"
+	ExpiresByType application/x-javascript 	"access plus 1 week"
+	ExpiresByType application/x-shockwave-flash "access plus 1 week"
+</IfModule>
+
+#Header unset Set-Cookie # plante chez OVH
+#RequestHeader unset Cookie # plante chez OVH
+Header unset ETag
+FileETag none
+
+<IfModule mod_headers.c>
+	<FilesMatch "\\.(ico|jpe?g|png|gif|swf)$">
+		Header set Cache-Control "max-age=2592000, public"
+	</FilesMatch>
+	<FilesMatch "\\.(css)$">
+		Header set Cache-Control "max-age=604800, public"
+	</FilesMatch>
+	<FilesMatch "\\.(js)$">
+		Header set Cache-Control "max-age=216000, private"
+	</FilesMatch>
+	<FilesMatch "\\.(x?html?|php)$">
+		Header set Cache-Control "max-age=600, private, must-revalidate"
+	</FilesMatch>
+</IfModule>
