@@ -80,9 +80,14 @@ if (function_exists('construire_page')!==true) {
 					$retour .= '<meta '.$meta.' />';
 			if (!empty($page['header']['css']))
 				foreach ($page['header']['css'] as $media => $css) {
-					if (is_numeric($media)) $media="all";
-					if ($dev===false && file_exists($css.'.min.css')) $css .= '.min.css';
-					$retour .= '<link rel="stylesheet" type="text/css" href="'.$css.'" media="'.$media.'" />';
+					if ($media === 'direct') {
+						if (is_array($css)) $css=implode($css);
+						$retour .= '<style>'.$css.'</style>';
+					} else {
+						if (is_numeric($media)) $media="all";
+						if ($dev===false && file_exists($css.'.min.css')) $css .= '.min.css';
+						$retour .= '<link rel="stylesheet" type="text/css" href="'.$css.'" media="'.$media.'" />';
+					}
 				}
 			$script='';
 			if (!empty($page['header']['js']))

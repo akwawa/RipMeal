@@ -241,9 +241,9 @@ class Form extends Base {
 		if($returnHTML)
 			ob_start();
 
-		$this->renderCSS();
+		// $this->renderCSS();
 		$this->view->render();
-		$this->renderJS();
+		// $this->renderJS();
 
 		/*The form's instance is serialized and saved in a session variable for use during validation.*/
 		$this->save();
@@ -263,15 +263,21 @@ class Form extends Base {
 			$form->errorView->renderAjaxErrorResponse();
 	}
 
-	protected function renderCSS() {
+	public function renderCSS($returnHTML=false) {
+		if($returnHTML)
+			ob_start();
+
 		$this->renderCSSFiles();
 
-		echo '<style type="text/css">';
 		$this->view->renderCSS();
 		$this->errorView->renderCSS();
-		foreach($this->_elements as $element)
+		foreach($this->_elements as $element) {}
 			$element->renderCSS();
-		echo '</style>';
+		if($returnHTML) {
+			$html = ob_get_contents();
+			ob_end_clean();
+			return $html;
+		}
 	}
 
 	protected function renderCSSFiles() {
@@ -293,10 +299,13 @@ class Form extends Base {
 		}	
 	}
 
-	protected function renderJS() {
+	public function renderJS($returnHTML=false) {
+		if($returnHTML)
+			ob_start();
+
 		$this->renderJSFiles();	
 
-		echo '<script type="text/javascript">';
+		if (!$returnHTML) echo '<script type="text/javascript">';
 		$this->view->renderJS();
 		foreach($this->_elements as $element)
 			$element->renderJS();
@@ -362,8 +371,13 @@ JS;
 			});
 JS;
 		}
-
-		echo '}); </script>';
+		echo '});';
+		if (!$returnHTML) echo '}); </script>';
+	if($returnHTML) {
+			$html = ob_get_contents();
+			ob_end_clean();
+			return $html;
+		}
 	}
 
 	protected function renderJSFiles() {

@@ -30,6 +30,7 @@ $page['header']['css'][] = 'css/jquery.noty.css';
 $page['header']['css'][] = 'css/jquery.dataTables.css';
 $page['header']['css'][] = 'css/jquery.dataTables.tableTools.min.css';
 $page['header']['css'][] = 'css/jquery.dataTables.colVis.min.css';
+$page['header']['css'][] = 'css/bootstrap-combined.min.css';
 
 $page['header']['js'][] = 'js/jquery.min.js';
 $page['header']['js'][] = 'js/jquery.dataTables.js';
@@ -44,7 +45,7 @@ $page['header']['js'][] = 'js/jquery.cookie.min.js';
 $page['body'] = array('header', 'menu', 'contenu', 'footer');
 $page['body']['header'] = '<h1>'.$header.'</h1>';
 
-$page['body']['menu'] = array($racine_url => 'accueil', 'client' => 'Client', 'menu' => 'Menu', 'parametre' => 'paramètre', 'compte' => 'Compte', 'sauvegarde' => 'sauvegarde', 'login-logout' => 'Se déconnecter');
+$page['body']['menu'] = array($racine_url => 'accueil', 'client' => 'Client', 'menu' => 'Menu', 'regime' => 'Régime', 'parametre' => 'paramètre', 'compte' => 'Compte', 'sauvegarde' => 'sauvegarde', 'login-logout' => 'Se déconnecter');
 $page['body']['contenu']='';
 $menu=(empty($_GET['menu']))?$menu_defaut:$_GET['menu'];
 $categorie=(empty($_GET['categorie']))?'index':$_GET['categorie'];

@@ -31,7 +31,6 @@ if (!empty($_SESSION[$application]['idRank'])) {
 			/*******************/
 			
 			$page['header']['js'][] = 'js-compte-compte.js';
-			// $page['header']['js']['direct'][] = '$("#table_compte").dataTable();';
 			$page['header']['js']['direct'][] = '$(document).ready(function(){$("#table_compte").DataTable({"sDom":"CRT<\"clear\">lfrtip","bStateSave":true,"oTableTools":{"sSwfPath":"swf/copy_csv_xls_pdf.swf"},"oLanguage":{"sUrl":"js/jquery.dataTable.french.txt.js"}});$("#table_compte").dataTable().columnFilter();$(".popup").click(function(){return false;});});';
 		}
 	}
