@@ -48,10 +48,27 @@ if (empty($_SESSION[$application]['idRank'])) {
 		if ($sock = @fsockopen($racineSite, 80, $num, $error, 5)) {
 			$temp=$page['body']['contenu'];
 			
-			include('creer.php');
+			$requete = new Sauvegarde;
+			$requete->liste_save();
+			$liste_save = $requete->liste_save;
+			$inconnu_base = true;
+			$inconnu_logiciel = true;
+
+			foreach ($liste_save as $fichier) {
+				$nom_fichier=basename($fichier);
+				$date_sauvegarde = substr($nom_fichier, 0, 10);
+				$debut = stripos($fichier, '/')+1;
+				$fin = stripos($fichier, '/', $debut)-$debut;
+				$type_fichier=substr($fichier, $debut, $fin);
+				if ($date_sauvegarde === date('Y-m-d')) {
+					if ($type_fichier === "base") $inconnu_base = false;
+					if ($type_fichier === "logiciel") $inconnu_logiciel = false;
+				}
+			}
+			if ($inconnu_base === true || $inconnu_logiciel === true) include('creer.php');
+
 			$page['body']['contenu']=$temp;
 
-			$requete = new Sauvegarde();
 			$json = $requete->version_actuelle();
 			$version_actuelle = json_decode($json, true);
 			

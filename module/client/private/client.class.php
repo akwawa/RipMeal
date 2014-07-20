@@ -16,22 +16,31 @@
 		function listerColonnes($table=false) {
 			if ($table===false) $table=$this->table;
 			$tab = $this->colonnes($table);
+			$this->namesColumns[$table] = array();
 			for ($i=0;$i<count($tab);$i++) {
-				$this->namesColumns[] = $tab[$i]['COLUMN_NAME'];
+				$this->namesColumns[$table][] = $tab[$i]['COLUMN_NAME'];
 			}
 			$this->allInfos = $tab;
 		}
 			
 		function lister_clients($id=false) {
-			// return $this->fetch($this->table);
+			if (empty($this->namesColumns['client'])) {$this->listerColonnes('client');}
 			$this->__reset();
-			$this->select(array('client' => array("id","name","firstname","sexe","address","fulladdress","zip","city","phone","secondPhone","idTournee","numeroTournee","pain","potage","actif","AlimentInterdit","sacPorte","corbeille","ressourceName","ressourceNumber","ressourceSecondNumber","ressourceAddress")), 'c');
+			$this->select(array('client' => $this->namesColumns['client']), 'c');
 			$this->select(array('tournee' => array('id', 'name', 'fullname')), 't');
 			
 			if ($id!==false){$this->where(array('c'=>array('id'=>$id)));}
 			
 			// echo $this->buildAll().'<br>';
 			return $this->execute();
+		}
+
+		function lister_tournee($id=false, $name=false, $fullname=false) {
+			$where=false;
+			if ($id!==false){$where['id']=$id;}
+			if ($name!==false){$where['name']=$name;}
+			if ($fullname!==false){$where['fullname']=$fullname;}
+			return $this->fetch('tournee', false, $where, false, false, 't');
 		}
 		
 		function lister_rank() {
@@ -42,9 +51,9 @@
 			$alias=($alias===false)?((empty($this->alias))?$table:$this->alias):$alias;
 			$columns=array();
 			
-			if (empty($this->namesColumns)) $this->listerColonnes($table);
-			if ($colonne===false) $colonne=$this->namesColumns;
-			foreach ($colonne as $temp) if (in_array($temp, $this->namesColumns)) $columns[] = $temp;
+			if (empty($this->namesColumns[$table])) $this->listerColonnes($table);
+			if ($colonne===false) $colonne=$this->namesColumns[$table];
+			foreach ($colonne as $temp) if (in_array($temp, $this->namesColumns[$table])) $columns[] = $temp;
 			
 			$this->__reset();
 			$this->select(array($table => $columns), $alias);

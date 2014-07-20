@@ -27,8 +27,6 @@ function action(element) {
 }
 
 function modifier_compte(id) {
-	// var id=element.getAttribute("data-id");
-
 	outerHTML = '<div id="chargement">Chargement en cours</div>';
 	details(outerHTML);
 	var form = document.getElementById("compte-modifier").innerHTML;

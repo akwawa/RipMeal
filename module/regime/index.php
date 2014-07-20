@@ -33,10 +33,10 @@ if (!empty($_SESSION[$application]['idRank'])) {
 			$form->addElement(new Element\Select('Remplacement', 'idRemp', $tab_regime, array('id' => 'idRemp')));
 			$form->addElement(new Element\Button("Ajouter un régime"));
 			$page['body']['contenu'] .= $form->render(true);
-
 			$page['header']['css']['direct'][] = $form->renderCSS(true);
-			$page['header']['js']['direct'][] = $form->renderJS(true).'$(document).ready(function(){$("#table_regime").DataTable({"sDom":"CRT<\"clear\">lfrtip","bStateSave":true,"oTableTools":{"sSwfPath":"swf/copy_csv_xls_pdf.swf"},"oLanguage":{"sUrl":"js/jquery.dataTable.french.txt.js"}});$("#table_regime").dataTable().columnFilter();$(".popup").click(function(){return false;});});';
-
+			$page['header']['js']['direct'][] = $form->renderJS(true);
+			
+			$page['header']['js']['direct'][] = '$(document).ready(function(){$("#table_regime").DataTable({"sDom":"CRT<\"clear\">lfrtip","bStateSave":true,"oTableTools":{"sSwfPath":"swf/copy_csv_xls_pdf.swf"},"oLanguage":{"sUrl":"js/jquery.dataTable.french.txt.js"}});$("#table_regime").dataTable().columnFilter();$(".popup").click(function(){return false;});});';
 		}
 	}
 }
