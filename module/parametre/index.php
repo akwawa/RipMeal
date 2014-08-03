@@ -8,8 +8,32 @@ if (!empty($_SESSION[$application]['idRank'])) {
 	} else {
 		include_once(dirname(__FILE__).'/private/'.$menu.'.class.php');
 		include("librairie/PFBC/Form.php");
-		
-		$login=$pass=$idRank='';
+
+if(isset($_POST["form"])) {
+	$result = false;
+	if(Form::isValid($_POST["form"])) {
+		$requete = new Parametre;
+		if ($_POST["form"] === 'parametre-modifier') {
+			$json = $requete->lister_param();
+			$lister_param = json_decode($json, true);
+			
+			if (!empty($lister_param['result'])) {
+				$tab_value=array();
+				foreach ($lister_param['result'] as $param) {
+					if (!empty($_POST[$param['u.text']])){
+						$tab_value[$param['u.id']]=$_POST[$param['u.text']];
+					}
+				}
+				$result = $requete->update_param($_SESSION[$application]['id'], $tab_value);
+				if ($result === true) $retour=true;
+			}
+		}
+	} else {
+		Form::renderAjaxErrorResponse($_POST["form"]);
+	}
+	echo json_encode(array('result' => $result));
+	exit();
+}
 
 	/** Formulaire **/
 		$requete = new Parametre;
@@ -17,14 +41,14 @@ if (!empty($_SESSION[$application]['idRank'])) {
 		$lister_param = json_decode($json, true);
 
 		if (!empty($lister_param['result'])) {
-			$form = new Form("parametre");
+			$form = new Form("parametre-modifier");
+			$form->configure(array("prevent" => array("bootstrap", "jQuery"), "action" => $_SERVER['REQUEST_URI']));
 			$form->configure(array(
 				"ajax" => 1,
-				"ajaxCallback" => "modifier_parametre",
-				"action" => $_SERVER['REQUEST_URI']
+				"ajaxCallback" => "modifier_parametre"
 			));
-			$form->addElement(new Element\HTML('<legend>Paramètres</legend>'));
-			$form->addElement(new Element\Hidden("form", "parametre"));
+			$form->addElement(new Element\Hidden("form", "parametre-modifier"));
+			$form->addElement(new Element\HTML('<h2>Modifier vos paramètres</h2>'));
 			foreach ($lister_param['result'] as $param) {
 				$tmp = explode(';', $param['u.possibility']);
 				$tabOption=array();
@@ -33,6 +57,9 @@ if (!empty($_SESSION[$application]['idRank'])) {
 			}
 			$form->addElement(new Element\Button("Modifier les paramètres"));
 			$page['body']['contenu'] .= $form->render(true);
+			$page['header']['css']['direct'][] = $form->renderCSS(true);
+			$page['header']['js']['direct'][] = $form->renderJS(true);
+
 			$page['header']['js'][] = 'js-parametre-parametre.js';
 		}
 	}

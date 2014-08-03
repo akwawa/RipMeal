@@ -1,5 +1,7 @@
 <?php
 
+use PFBC\Form, PFBC\Element, PFBC\Validation;
+
 if (!empty($_SESSION[$application]['idRank'])) {
 	if (!file_exists(dirname(__FILE__).'/private/'.$menu.'.class.php')) {
 		perror(11, 'Impossible de trouver la class "'.dirname(__FILE__).'/private/'.$menu.'.class.php"');

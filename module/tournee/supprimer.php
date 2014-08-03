@@ -8,8 +8,8 @@ if (!empty($_SESSION[$application]['idRank'])) {
 		$id = empty($_REQUEST['id'])?false:$_REQUEST['id'];
 
 		if ($id !== false) {
-			$requete = new Regime;
-			$requete->supprimer_regime($id);
+			$requete = new Tournee;
+			$requete->supprimer_tournee($id);
 			$retour['result'][0]=true;
 		}
 	}

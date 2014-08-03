@@ -40,6 +40,18 @@ function getScrollPosition() {
 	return Array((document.documentElement && document.documentElement.scrollLeft) || window.pageXOffset || self.pageXOffset || document.body.scrollLeft,(document.documentElement && document.documentElement.scrollTop) || window.pageYOffset || self.pageYOffset || document.body.scrollTop);
 }
 
+Object.size = function(obj) {
+	var size = 0, key;
+	for (key in obj) {
+		if (obj.hasOwnProperty(key)) size++;
+	}
+	return size;
+};
+
+function trim(myString) {
+	return myString.replace(/^\s+/g,'').replace(/\s+$/g,'')
+}
+
 /******** Noty *********/
 
 function noty_modifSuccess() {
@@ -54,14 +66,15 @@ function noty_modifSuccess() {
 			});
 }
 
-function noty_modifError() {
+function noty_modifError(message) {
+	if (!message) {message='Les modifications n\'ont pas été enregistrées.'}
 	var layout=jQuery.cookie('positionMessage');
 	var n = noty({
 				dismissQueue: true,
 				force: true,
 				layout: layout,
 				theme: 'defaultTheme',
-				text: 'Les modifications n\'ont pas été enregistrées.',
+				text: message,
 				type: 'error'
 			});
 }

@@ -9,7 +9,35 @@ if (!empty($_SESSION[$application]['idRank'])) {
 		include_once(dirname(__FILE__).'/private/'.$menu.'.class.php');
 		include("librairie/PFBC/Form.php");
 
-		$temps=(empty($_POST['dateCalendrier']))?time():strtotime($_POST['dateCalendrier']);
+// if(isset($_POST["form"])) {
+// 	if(Form::isValid($_POST["form"])) {
+// 		if ($_POST["form"] === 'changer_semaine') {
+// 			$requete = new Menu;
+// 			$json = $requete->lister_regime();
+// 			$lister_regime = json_decode($json, true);
+
+// 			$requete->ajouter_tournee($id, $name, $fullname);
+// 			$json = $requete->lister_tournee(false, $name, $fullname);
+// 			$lister_tournee = json_decode($json, true);
+// 			if (!empty($lister_tournee['result'])) {
+// 				$id = $lister_tournee['result'][0]['t.id'];
+// 			}
+// 		}
+// 		$result = true;
+// 	} else {
+// 		$result = false;
+// 		Form::renderAjaxErrorResponse($_POST["form"]);
+// 	}
+// 	echo json_encode(array('result' => $result, 'id' => $id, 'name' => $name, 'fullname' => $fullname));
+// 	exit();
+// }
+
+		$page['body']['contenu'] .= '<p>
+			<a class="button"  href="#menu-importer" onclick="importer_menu();">Importer une semaine de menu</a>
+			<a class="button" href="#menu-semaine" onclick="changer_semaine();">Changer de semaine</a>
+		</p>';
+
+		$temps=(empty($_REQUEST['mod-dateCalendrier']))?time():strtotime($_REQUEST['mod-dateCalendrier']);
 		$numSemaine = date('W', $temps); // demarre de 1 et non 0 /!\
 		$lundiSemaine = week_dates($numSemaine-1, date('Y', $temps))-43200;
 
@@ -63,27 +91,48 @@ if (!empty($_SESSION[$application]['idRank'])) {
 				$page['body']['contenu'] .= '</tr>';
 			}
 
-			$page['body']['contenu'] .= '</tbody></table><p><a href="menu-importer">Importer une semaine de menu</a></p>';
+			$page['body']['contenu'] .= '</tbody></table>';
 
-			$form = new Form();
-			$form->configure(array("action" => $menu));
-			$form->addElement(new Element\HTML('<legend>Changer de semaine</legend>'));
-			$form->addElement(new Element\Week('Semaine du menu', 'dateCalendrier', array('id' => 'dateCalendrier', 'value' => date('Y', $temps).'-W'.date('W', $temps))));
-			$form->addElement(new Element\Button("Changer de semaine"));
-			$page['body']['contenu'] .= $form->render(true);
+		$form = new Form('changer_semaine');
+		$form->configure(array("prevent" => array("bootstrap", "jQuery"), "action" => $_SERVER['REQUEST_URI']));
+		$form->configure(array(
+			"class" => "desktop-hidden"
+		));
+		$form->setValues(array(
+			"mod-dateCalendrier" => date('Y', $temps).'-W'.date('W', $temps)
+		));
+		$form->addElement(new Element\Hidden("form", "changer_semaine"));
+		$form->addElement(new Element\HTML('<h2>Changer de semaine</h2>'));
+		$form->addElement(new Element\Week('Semaine du menu', 'mod-dateCalendrier', array('id' => 'mod-dateCalendrier')));
+		$form->addElement(new Element\Button("Changer de semaine"));
+		$page['body']['contenu'] .= $form->render(true);
+		$page['header']['css']['direct'][] = $form->renderCSS(true);
+		$page['header']['js']['direct'][] = $form->renderJS(true);
+
 
 		$form = new Form("uploadSemaine");
+		$form->configure(array("prevent" => array("bootstrap", "jQuery"), "action" => $_SERVER['REQUEST_URI']));
 		$form->configure(array(
 			"ajax" => 1,
-			"ajaxCallback" => "loadSemaine"
+			"ajaxCallback" => "loadSemaine",
+			"class" => "desktop-hidden"
 		));
-		$form->addElement(new Element\HTML('<legend>Importer des menus</legend>'));
+		$form->setValues(array(
+			"imp-dateCalendrier" => date('Y').'-W'.date('W'),
+			"imp-delimiteur" => ";",
+			"imp-files" => ""
+		));
+		$form->addElement(new Element\HTML('<h2>Importer des menus</h2>'));
 		$form->addElement(new Element\Hidden("form", "uploadSemaine"));
-		$form->addElement(new Element\Week('Semaine du menu', 'dateCalendrier', array('id' => 'dateCalendrier', 'value' => date('Y').'-W'.date('W'))));
-		$form->addElement(new Element\File('Choix du fichier', 'files', array('id' => 'files')));
-		$form->addElement(new Element\Textbox("Délimiteur", "delimiteur", array("id" => "delimiteur", 'value' => ';', 'size' => '1', 'maxlength' => '1')));
+		$form->addElement(new Element\Week('Semaine du menu', 'imp-dateCalendrier', array('id' => 'imp-dateCalendrier')));
+		$form->addElement(new Element\File('Choix du fichier', 'imp-files', array('id' => 'imp-files')));
+		$form->addElement(new Element\Textbox("Délimiteur", "imp-delimiteur", array("id" => "imp-delimiteur", 'size' => '1', 'maxlength' => '1')));
 		$form->addElement(new Element\Button("Importer les menus"));
 		$page['body']['contenu'] .= $form->render(true);
+		$page['header']['css']['direct'][] = $form->renderCSS(true);
+		$page['header']['js']['direct'][] = $form->renderJS(true);
+
+
 		$page['body']['contenu'] .= '<div id="resultat"></div>';
 		$page['header']['js'][] = 'js-menu-menu.js';
 

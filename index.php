@@ -45,7 +45,7 @@ $page['header']['js'][] = 'js/jquery.cookie.min.js';
 $page['body'] = array('header', 'menu', 'contenu', 'footer');
 $page['body']['header'] = '<h1>'.$header.'</h1>';
 
-$page['body']['menu'] = array($racine_url => 'accueil', 'client' => 'Client', 'menu' => 'Menu', 'regime' => 'Régime', 'parametre' => 'paramètre', 'compte' => 'Compte', 'sauvegarde' => 'sauvegarde', 'login-logout' => 'Se déconnecter');
+$page['body']['menu'] = array($racine_url => 'accueil', 'client' => 'Client', 'tournee' => 'Tournée', 'menu' => 'Menu', 'regime' => 'Régime', 'parametre' => 'Paramètre', 'compte' => 'Compte', 'sauvegarde' => 'sauvegarde', 'login-logout' => 'Se déconnecter');
 $page['body']['contenu']='';
 $menu=(empty($_GET['menu']))?$menu_defaut:$_GET['menu'];
 $categorie=(empty($_GET['categorie']))?'index':$_GET['categorie'];

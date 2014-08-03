@@ -23,6 +23,41 @@
 			$this->allInfos = $tab;
 		}
 
+		function ajouter_regime($id=false, $name, $fullname, $idRemp) {
+			$this->__reset();
+
+			$tab_champs=array();
+			if ($id!==false) $tab_champs['id']=$id;
+			$tab_champs['name']=$name;
+			$tab_champs['fullname']=$fullname;
+			if ($idRemp!==false) $tab_champs['idRemp']=$idRemp;
+			$this->insert('regime', $tab_champs);
+
+			// echo $this->buildAll().'<br>';
+			$this->execute();
+		}
+
+		function modif_regime($id, $name=false, $fullname=false, $idRemp=false) {
+			$this->__reset();
+
+			$tab_champs=array();
+			if ($name!==false) $tab_champs['name']=$name;
+			if ($fullname!==false) $tab_champs['fullname']=$fullname;
+			if ($idRemp!==false) $tab_champs['idRemp']=$idRemp;
+			
+			$this->update('regime', $tab_champs);
+			$this->where(array('regime'=>array('id'=>$id)));
+
+			$this->execute();
+		}
+
+		function supprimer_regime($id) {
+			$this->__reset();
+			$this->delete('regime', array('id'=>$id));
+			// echo $this->buildAll().'<br>';
+			return $this->execute();
+		}
+
 		function lister_regime($id=false, $name=false, $fullname=false, $idRemp=false) {
 			$where=false;
 			if ($id!==false){$where['id']=$id;}

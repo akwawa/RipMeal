@@ -22,7 +22,7 @@ RewriteRule .*(img/[^/]*\.(png|png|ico))$ $1 [QSA,L]
 
 RewriteRule ^js-([a-zA-Z]+)-([a-zA-Z]+\.js) module/$1/js/$2 [QSA,L]
 RewriteRule ^css-([a-zA-Z]+)-([a-zA-Z]+\.css) module/$1/css/$2 [QSA,L]
-RewriteRule ^img-([a-zA-Z]+)-([a-zA-Z]+\.(png|png|ico)) module/$1/img/$2 [QSA,L]
+RewriteRule ^img-([a-zA-Z]+)-([a-zA-Z_]+\.(jpeg|png|png|ico)) module/$1/img/$2 [QSA,L]
 RewriteRule images/([^/]*\.*)$ img/$1 [QSA,L]
 RewriteRule ^api-([a-zA-Z]+)-([a-zA-Z]+)$ api.php?menu=$1&categorie=$2 [QSA,L]
 RewriteRule ^api-([a-zA-Z]+)-([a-zA-Z]+)-([a-zA-Z\_\-\.\+0-9]+)[-.*]*$ api.php?menu=$1&categorie=$2&idPublic=$3 [QSA,L]
@@ -32,7 +32,6 @@ RewriteRule ^([a-zA-Z]+)-([a-zA-Z]+)[-.*]* ?menu=$1&categorie=$2 [QSA,L]
 RewriteRule ^([a-zA-Z]+)-([0-9]+)[-.*]* ?menu=$1&idPublic=$2 [QSA,L]
 RewriteRule ^robots.txt$ robots.txt [QSA,L]
 RewriteRule ^sitemap.xml$ sitemap.xml [QSA,L]
-RewriteRule ^example.html$ example.html [QSA,L]
 RewriteRule ^([a-zA-Z]*)$ index.php?menu=$1 [QSA,L]
 
 SetOutputFilter DEFLATE

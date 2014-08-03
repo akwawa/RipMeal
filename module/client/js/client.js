@@ -3,29 +3,37 @@ var compte = new Object();
 function modifier_compte(id) {
 	$(document).ready( function () {
 		$('html,body').animate({scrollTop: $("#client-modifier").offset().top}, 'slow');
-		$('#id').val($('#td_' + id + '_id').text());
-		$('#name').val($('#td_' + id + '_name').text());
-		$('#firstname').val($('#td_' + id + '_firstname').text());
-		$('#sexe').val($('#td_' + id + '_sexe').text());
-		$('#address').val($('#td_' + id + '_address').text());
-		$('#fulladdress').val($('#td_' + id + '_fulladdress').text());
-		$('#zip').val($('#td_' + id + '_zip').text());
-		$('#city').val($('#td_' + id + '_city').text());
-		$('#phone').val($('#td_' + id + '_phone').text());
-		$('#secondPhone').val($('#td_' + id + '_secondPhone').text());
-		$('#idTournee').val($('#td_' + id + '_idTournee').text());
-		$('#numeroTournee').val($('#td_' + id + '_numeroTournee').text());
-		$('#pain').val($('#td_' + id + '_pain').text());
-		$('#potage').val($('#td_' + id + '_potage').text());
-		$('#actif').val($('#td_' + id + '_actif').text());
-		$('#info').val($('#td_' + id + '_info').text());
-		$('#AlimentInterdit').val($('#td_' + id + '_AlimentInterdit').text());
-		$('#sacPorte').val($('#td_' + id + '_sacPorte').text());
-		$('#corbeille').val($('#td_' + id + '_corbeille').text());
-		$('#ressourceName').val($('#td_' + id + '_ressourceName').text());
-		$('#ressourceNumber').val($('#td_' + id + '_ressourceNumber').text());
-		$('#ressourceSecondNumber').val($('#td_' + id + '_ressourceSecondNumber').text());
-		$('#ressourceAddress').val($('#td_' + id + '_ressourceAddress').text());
+		$('#id').val($('#tr_' + id).data("id"));
+		$('#name').val($('#tr_' + id).data("name"));
+		$('#firstname').val($('#tr_' + id).data("firstname"));
+		$('#sexe').val($('#tr_' + id).data("sexe"));
+		$('#address').val($('#tr_' + id).data("address"));
+		$('#fulladdress').val($('#tr_' + id).data("fulladdress"));
+		$('#zip').val($('#tr_' + id).data("zip"));
+		$('#city').val($('#tr_' + id).data("city"));
+		$('#phone').val($('#tr_' + id).data("phone"));
+		$('#secondPhone').val($('#tr_' + id).data("secondphone"));
+		$('#idTournee').val($('#tr_' + id).data("idtournee"));
+
+		$('#numeroTournee').append('<option value="0">En premier</option>');
+		var json = jQuery.parseJSON($('#tab_numeroTournee').text());
+		jQuery.each(json[$('#tr_' + id).data("idtournee")], function(i, value) {
+            $('#numeroTournee').append($('<option>').text(value["c.name"]+" "+value["c.firstname"]).attr('value', value["c.numeroTournee"]));
+        });
+        $('#numeroTournee').val($('#tr_' + id).data("numerotournee"));
+
+
+		$('#pain').val($('#tr_' + id).data("pain"));
+		$('#potage').val($('#tr_' + id).data("potage"));
+		$('#actif').val($('#tr_' + id).data("actif"));
+		$('#info').val($('#tr_' + id).data("info"));
+		$('#AlimentInterdit').val($('#tr_' + id).data("alimentinterdit"));
+		$('#sacPorte').val($('#tr_' + id).data("sacporte"));
+		$('#corbeille').val($('#tr_' + id).data("corbeille"));
+		$('#ressourceName').val($('#tr_' + id).data("ressourcename"));
+		$('#ressourceNumber').val($('#tr_' + id).data("ressourcenumber"));
+		$('#ressourceSecondNumber').val($('#tr_' + id).data("ressourcesecondnumber"));
+		$('#ressourceAddress').val($('#tr_' + id).data("ressourceaddress"));
 	});
 }
 

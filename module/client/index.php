@@ -59,6 +59,7 @@ if(isset($_POST["form"])) {
 	}
 	exit();
 }
+$tab_numeroTournee = array();
 
 		$requete = new Client;
 		$json = $requete->lister_clients();
@@ -69,7 +70,36 @@ if(isset($_POST["form"])) {
 			$th = '<tr><th>id</th><th>name</th><th>firstname</th><th>sexe</th><th>address</th><th>fulladdress</th><th>zip</th><th>city</th><th>phone</th><th>secondPhone</th><th>idTournee</th><th>nomTournee</th><th>numeroTournee</th><th>pain</th><th>potage</th><th>actif</th><th>AlimentInterdit</th><th>sacPorte</th><th>corbeille</th><th>ressourceName</th><th>ressourceNumber</th><th>ressourceSecondNumber</th><th>ressourceAddress</th><th>Action</th></tr>';
 			$page['body']['contenu'] .= '<table id="table_client"><thead>'.$th.'</thead><tfoot>'.$th.'</tfoot><tbody>';
 			foreach ($lister_user as $line) {
-				$page['body']['contenu'] .= '<tr>
+				if (empty($tab_numeroTournee[$line['c.idTournee']])) {
+					$json = $requete->lister_numeroTournee($line['c.idTournee']);
+					$lister_numeroTournee = json_decode($json, true);
+					$tab_numeroTournee[$line['c.idTournee']] = $lister_numeroTournee['result'];
+				}
+
+				$page['body']['contenu'] .= '<tr id="tr_'.$line['c.id'].'"
+		data-id="'.$line['c.id'].'"
+		data-name="'.$line['c.name'].'"
+		data-firstname="'.$line['c.firstname'].'"
+		data-sexe="'.$line['c.sexe'].'"
+		data-address="'.$line['c.address'].'"
+		data-fulladdress="'.$line['c.fulladdress'].'"
+		data-zip="'.$line['c.zip'].'"
+		data-city="'.$line['c.city'].'"
+		data-phone="'.$line['c.phone'].'"
+		data-secondPhone="'.$line['c.secondPhone'].'"
+		data-idTournee="'.$line['c.idTournee'].'"
+		data-nameTournee="'.$line['t.name'].'"
+		data-numeroTournee="'.$line['c.numeroTournee'].'"
+		data-pain="'.$line['c.pain'].'"
+		data-potage="'.$line['c.potage'].'"
+		data-actif="'.(($line['c.actif']==true)?'1':'-1').'"
+		data-AlimentInterdit="'.$line['c.AlimentInterdit'].'"
+		data-sacPorte="'.(($line['c.sacPorte']==true)?'1':'-1').'"
+		data-corbeille="'.(($line['c.corbeille']==true)?'1':'-1').'"
+		data-ressourceName="'.$line['c.ressourceName'].'"
+		data-ressourceNumber="'.$line['c.ressourceNumber'].'"
+		data-ressourceAddress="'.$line['c.ressourceAddress'].'"
+		>
 	<td id="td_'.$line['c.id'].'_id">'.$line['c.id'].'</td>
 	<td id="td_'.$line['c.id'].'_name">'.$line['c.name'].'</td>
 	<td id="td_'.$line['c.id'].'_firstname">'.$line['c.firstname'].'</td>
@@ -108,6 +138,8 @@ if (!empty($lister_tournee['result'])) {
 		$tab_tournee[$tournee['t.id']] = $tournee['t.name'];
 	}
 }
+
+$page['body']['contenu'] .= '<div id="tab_numeroTournee" name="tab_numeroTournee" class="desktop-hidden">'.json_encode($tab_numeroTournee).'</div>';
 
 $form = new Form('client-modifier');
 $form->configure(array("prevent" => array("bootstrap", "jQuery"),"action" => $_SERVER['REQUEST_URI']));
@@ -152,17 +184,17 @@ $form->addElement(new Element\HTML('</fieldset>'));
 
 $form->addElement(new Element\HTML('<fieldset><legend>Tournées</legend>'));
 $form->addElement(new Element\Select('Tournée', 'idTournee', $tab_tournee, array('id' => 'idTournee')));
-$form->addElement(new Element\Select('Numéro dans la tournée', 'numeroTournee', array(), array('id' => 'numeroTournee')));
+$form->addElement(new Element\Select('Insérer après', 'numeroTournee', array(), array('id' => 'numeroTournee')));
 $form->addElement(new Element\Number('Pain', 'pain', array('id' => 'pain')));
 $form->addElement(new Element\Number('Potage', 'potage', array('id' => 'potage')));
 $form->addElement(new Element\HTML('</fieldset>'));
 
 $form->addElement(new Element\HTML('<fieldset><legend>Autres informations</legend>'));
-$form->addElement(new Element\Select('Actif', 'actif', array(0 => "Non", 1 => "Oui"), array('id' => 'actif')));
+$form->addElement(new Element\Select('Actif', 'actif', array("-1" => "Non", "1" => "Oui"), array('id' => 'actif')));
 $form->addElement(new Element\Textarea("Info", "info"));
 $form->addElement(new Element\Textarea("Aliment interdit", "AlimentInterdit"));
-$form->addElement(new Element\Select('Sac à la porte', 'sacPorte', array(0 => "Non", 1 => "Oui"), array('id' => 'sacPorte')));
-$form->addElement(new Element\Select('Corbeille', 'corbeille', array(0 => "Non", 1 => "Oui"), array('id' => 'corbeille')));
+$form->addElement(new Element\Select('Sac à la porte', 'sacPorte', array("-1" => "Non", "1" => "Oui"), array('id' => 'sacPorte')));
+$form->addElement(new Element\Select('Corbeille', 'corbeille', array("-1" => "Non", "1" => "Oui"), array('id' => 'corbeille')));
 $form->addElement(new Element\HTML('</fieldset>'));
 
 $form->addElement(new Element\HTML('<fieldset><legend>Personne ressource</legend>'));

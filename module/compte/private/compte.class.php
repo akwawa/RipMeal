@@ -21,6 +21,22 @@
 			}
 			$this->allInfos = $tab;
 		}
+
+		function recup_salage() {
+			$day = date("Y_m_d");
+			$repertoire = 'module/compte/salage';
+			$fichier = 'module/compte/salage/'.$day;
+			if (!file_exists($fichier)) {
+				if (!file_exists($repertoire)) mkdir($repertoire);
+				$salage = getToken().rand(1, 9);
+				$file = fopen($fichier,"w");
+				fwrite($file, $salage);
+				fclose($file);
+			} else {
+				$salage = file_get_contents($fichier);
+			}
+			return json_encode(array('result' => $salage));
+		}
 		
 		function verif_login($login, $password) {
 			return $this->fetch($this->table, array('id', 'login', 'idRank'), array('login' => $login, 'pass' => array('value' => $password, 'salt' => true, 'hash' => 'sha1')), 1, false, $this->alias);
@@ -33,7 +49,7 @@
 			
 			if ($id!==false){$this->where(array('u'=>array('id'=>$id)));}
 			if ($login!==false){$this->where(array('u'=>array('login'=>$login)));}
-			if ($pass!==false){$this->where(array('u'=>array('pass'=>$pass)));}
+			if ($pass!==false){$this->where(array('u'=>array("pass" => array('value' => $pass, 'salt' => true, 'hash' => 'sha1'))));}
 			if ($idRank!==false){$this->where(array('u'=>array('idRank'=>$idRank)));}
 			
 			// echo $this->buildAll().'<br>';
@@ -49,7 +65,7 @@
 			$tab_champs['idRank']=$idRank;
 			$this->insert('user', $tab_champs);
 
-			// echo $this->buildAll();
+			// echo $this->buildAll().'<br>';
 			$this->execute();
 		}
 		

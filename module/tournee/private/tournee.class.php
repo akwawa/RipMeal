@@ -6,14 +6,15 @@
 		}
 	}
 
-	class Client extends requete {
+	class Tournee extends requete {
 		var $requete = '';
-		var $table = 'client';
-		var $alias = 'c';
+		var $table = 'tournee';
+		var $alias = 't';
 		var $allInfos = array();
 		var $namesColumns = array();
 		
 		function listerColonnes($table=false) {
+			$this->__reset();
 			if ($table===false) $table=$this->table;
 			$tab = $this->colonnes($table);
 			$this->namesColumns[$table] = array();
@@ -22,26 +23,24 @@
 			}
 			$this->allInfos = $tab;
 		}
-			
-		function lister_clients($id=false) {
-			if (empty($this->namesColumns['client'])) {$this->listerColonnes('client');}
+
+		function lister_clients_tournee($id=false, $numeroTournee=false) {
 			$this->__reset();
-			$this->select(array('client' => $this->namesColumns['client']), 'c');
-			$this->select(array('tournee' => array('id', 'name', 'fullname')), 't');
-			
-			if ($id!==false){$this->where(array('c'=>array('id'=>$id)));}
-			
+
+			$this->select(array('client' => array('id', 'name', 'firstname', 'numeroTournee', 'idTournee')), 'c');
+			$this->order('c', 'numeroTournee');
+			if ($id!==false){$this->where(array('c'=>array('idTournee'=>$id)));}
+			if ($numeroTournee!==false){$this->where(array('c'=>array('numeroTournee'=>$numeroTournee)));}
+
 			// echo $this->buildAll().'<br>';
 			return $this->execute();
 		}
 
-		function lister_numeroTournee($idTournee=false) {
-			if (empty($this->namesColumns['client'])) {$this->listerColonnes('client');}
+		function update_client_tournee($idClient, $numeroTournee, $idTournee) {
 			$this->__reset();
-			$this->select(array('client' => array('name', 'firstname', 'idTournee', 'numeroTournee')), 'c');
-			$this->order('c', 'numeroTournee');
-
-			if ($idTournee!==false){$this->where(array('c'=>array('idTournee'=>$idTournee)));}
+			
+			$this->update('client', array('numeroTournee'=>$numeroTournee, 'idTournee'=>$idTournee));
+			$this->where(array('client'=>array('id'=>$idClient)));
 
 			// echo $this->buildAll().'<br>';
 			return $this->execute();
@@ -54,11 +53,37 @@
 			if ($fullname!==false){$where['fullname']=$fullname;}
 			return $this->fetch('tournee', false, $where, false, false, 't');
 		}
-		
-		function lister_rank() {
-			return $this->fetch('rank', array('id', 'name', 'description'), false, false, false, 'r');
+
+		function ajouter_tournee($id=false, $name, $fullname){
+			$this->__reset();
+			$insert = array('name' => $name, 'fullname' => $fullname);
+			if ($id!==false){$insert['id']=$id;}
+			$this->insert('tournee', $insert);
+
+			// echo $this->buildAll().'<br>';
+			$this->execute();
+
+			return true;
 		}
-		
+
+		function modif_tournee($id, $name, $fullname) {
+			$this->__reset();
+			$this->update('tournee', array('name' => $name, 'fullname' => $fullname));
+			$this->where(array('tournee'=>array('id'=>$id)));
+
+			// echo $this->buildAll().'<br>';
+			$this->execute();
+
+			return true;
+		}
+
+		function supprimer_tournee($id) {
+			$this->__reset();
+			$this->delete('tournee', array('id'=>$id));
+			// echo $this->buildAll().'<br>';
+			return $this->execute();
+		}
+
 		function fetch($table, $colonne=false, $where=false, $limit=false, $order=false, $alias=false) {
 			$alias=($alias===false)?((empty($this->alias))?$table:$this->alias):$alias;
 			$columns=array();

@@ -12,18 +12,6 @@ function getMonday(d) {
 	return new Date(d.setDate(diff));
 }
 
-function trim(myString) {
-	return myString.replace(/^\s+/g,'').replace(/\s+$/g,'')
-}
-
-Object.size = function(obj) {
-	var size = 0, key;
-	for (key in obj) {
-		if (obj.hasOwnProperty(key)) size++;
-	}
-	return size;
-};
-
 function lundiSemaine(dateCalendrier) {
 	var year = dateCalendrier.substring(0, 4);
 	var week = dateCalendrier.substring(6);
@@ -34,29 +22,39 @@ function lundiSemaine(dateCalendrier) {
 	return monday;
 }
 
+function getWeekNumber(d) {
+	d = new Date(+d);
+	d.setHours(0,0,0);
+	d.setDate(d.getDate() + 4 - (d.getDay()||7));
+	var yearStart = new Date(d.getFullYear(),0,1);
+	var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7)
+	return d.getFullYear()+"W"+weekNo;
+}
+
 var timestampJour = '';
 var table = new Array();
 
 function loadSemaine() {
+	$("#resultat").text("");
 	var form = document.getElementById("uploadSemaine");
-	document.getElementById("resultat").textContent = "";
+	var fileInput = form.elements["imp-files"];
+	var dateCalendrier = form.elements["imp-dateCalendrier"].value;
+	var delimiteur = form.elements["imp-delimiteur"].value;
 
 	if (window.File && window.FileReader && window.FileList && window.Blob) {
-		var fileInput = form.elements["files"];
 		if (fileInput.files[0] != undefined) {
-			timestampJour = lundiSemaine(form.elements["dateCalendrier"].value);
+			timestampJour = lundiSemaine(dateCalendrier);
 
 			var mydiv = document.createElement('p');
 			mydiv.id = 'traitementFichier';
 			mydiv.textContent = 'Premier jour : ' + timestampJour.toLocaleDateString() + '. Le fichier est en cours de traitement';
 			document.getElementById("resultat").appendChild(mydiv);
-			var delimiteur = form.elements["delimiteur"].value;
 			var reader = new FileReader();
 			reader.readAsText(fileInput.files[0]);
 			reader.onload = function() {
 				var contents = reader.result;
 				createTable(contents, delimiteur, form);
-				document.getElementById("traitementFichier").textContent = 'Premier jour : ' + timestampJour.toLocaleDateString() + '. Traitement terminé.';
+				$("#traitementFichier").text('Premier jour : ' + timestampJour.toLocaleDateString() + '. Traitement terminé.');
 			};
 		} else {
 			alert('Votre devez selectionner un fichier.');
@@ -252,6 +250,13 @@ function ajouterTable(form) {
 			}
 		}
 	}
+
+	var newButton = document.createElement('a');
+	newButton.setAttribute('class', 'button');
+	var linkText = document.createTextNode("Afficher les menus importer sur le calendrier");
+	newButton.appendChild(linkText);
+	newButton.setAttribute('href', '?mod-dateCalendrier='+getWeekNumber(temp_timestampJour*1000));
+	document.getElementById("resultat").appendChild(newButton);
 }
 
 function ajouterMenu(nomRegime, jour, typeCalendrier, entree, viande, legume, fromage, dessert, timestampJour) {
@@ -265,26 +270,18 @@ function ajouterMenu(nomRegime, jour, typeCalendrier, entree, viande, legume, fr
 	}else{
 		document.getElementById(id).textContent = result['result'];
 	}
+}
 
+function importer_menu() {
+	$(document).ready( function () {
+		$("#uploadSemaine").removeClass("desktop-hidden");
+		$('html,body').animate({scrollTop: $("#uploadSemaine").offset().top}, 'slow');
+	});
+}
 
-	// var param = {"session":"all", "path":"menu", "fonctions":"ajouterMenu", "nomRegime":nomRegime, "jour":jour, "typeCalendrier":typeCalendrier, "entree":entree, "viande":viande, "legume":legume, "fromage":fromage, "dessert":dessert, "timestampJour":timestampJour};
-	// alert(nomRegime+" "+jour+" "+typeCalendrier+" "+entree+" "+viande+" "+legume+" "+fromage+" "+dessert+" "+timestampJour);
-	// var retour = ajax_sans_ecrire(param);
-	// alert(retour);
-	// var result = JSON.parse(retour);
-	// var mydiv = document.createElement('div');
-	// if (result["test"]) { alert(result["test"]); }
-	// var date = new Date(timestampJour*1000);
-	// var day = date.getDate();
-	// var month = date.getMonth();
-	// var year = date.getYear();
-	// var id = escape(nomRegime)+"_"+typeCalendrier+"_"+timestampJour;
-	// if (result["resultat"]) {
-		// 	document.getElementById(id).textContent = "ok";
-		// mydiv.innerHTML = result["resultat"]+" "+nomRegime+" "+jour+" "+typeCalendrier+" "+day+"/"+month+"/"+year;
-	// } else {
-		// 	document.getElementById(id).textContent = result["erreur"];
-		// mydiv.innerHTML = result["erreur"]+" "+nomRegime+" "+jour+" "+typeCalendrier+" "+day+"/"+month+"/"+year;
-	// }
-	// document.getElementById("resultat").appendChild(mydiv);
+function changer_semaine() {
+	$(document).ready( function () {
+		$("#changer_semaine").removeClass("desktop-hidden");
+		$('html,body').animate({scrollTop: $("#changer_semaine").offset().top}, 'slow');
+	});
 }

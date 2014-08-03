@@ -65,7 +65,7 @@ if (empty($_SESSION[$application]['idRank'])) {
 					if ($type_fichier === "logiciel") $inconnu_logiciel = false;
 				}
 			}
-			if ($inconnu_base === true || $inconnu_logiciel === true) include('creer.php');
+			if ($inconnu_base === true || $inconnu_logiciel === true) $requete->save_totale();
 
 			$page['body']['contenu']=$temp;
 

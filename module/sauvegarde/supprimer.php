@@ -1,33 +1,32 @@
 <?php
-if (empty($_SESSION[$application]['idRank'])) {
-	
-} else {
+if (!empty($_SESSION[$application]['idRank'])) {
+	$retour['result']=false;
 	if (!file_exists(dirname(__FILE__).'/private/'.$menu.'.class.php')) {
-		perror(21, 'Impossible de trouver la class "'.dirname(__FILE__).'/private/'.$menu.'.class.php"');
+		perror(11, 'Impossible de trouver la class "'.dirname(__FILE__).'/private/'.$menu.'.class.php"');
 	} else {
 		include_once(dirname(__FILE__).'/private/'.$menu.'.class.php');
 
-		$idPublic = empty($_GET['idPublic'])?false:$_GET['idPublic'];
-		
-		if ($idPublic!==false) {
+		$fichier = empty($_REQUEST['fichier'])?false:$_REQUEST['fichier'];
+
+		if ($fichier !== false) {
 			$requete = new Sauvegarde;
-			if ($idPublic==='all') {
+			if ($fichier==='all') {
 				$requete->supprimer_all_save();
+				$retour['result']=true;
 			} else {
-				$save = explode('_', $idPublic);
-				$save_existe = $requete->save_existe($save[0], urldecode($save[1]));
+				$save = explode('_', $fichier);
+				$rep = $save[0];
+				$file = urldecode($save[1].'_'.$save[2]);
+				$save_existe = $requete->save_existe($rep, $file);
 				if ($save_existe === true) {
-					if ($requete->supprimer_save($save[0], urldecode($save[1]))===true) {
-						$page['body']['contenu'] .= '<div class="info">Sauvegarde supprimée avec succès</div>';
-					} else {
-						perror(22, 'Impossible de supprimer le fichier de sauvegarde');
+					if ($requete->supprimer_save($rep, $file)===true) {
+						$retour['result']=true;
 					}
-				} else {
-					perror(22, 'La sauvegarde n\'as pas été trouvée');
 				}
 			}
 		}
-		include(dirname(__FILE__).'/index.php');
 	}
+	echo json_encode($retour);
 }
+
 ?>

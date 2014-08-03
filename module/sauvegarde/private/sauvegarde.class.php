@@ -107,7 +107,7 @@
 		
 		function save_bdd() {
 			if (empty($this->liste_tables)) $this->liste_tables();
-			if ($this->temps==false) $this->temps=date('Y-m-d H-i-s');
+			if ($this->temps==false) $this->temps=date('Y-m-d_H-i-s');
 			
 			$fic_base='private/base.php';
 			if (file_exists($fic_base)) include($fic_base); else echo 'Impossible de charger le fichier "'.$fic_base.'"';
@@ -123,7 +123,7 @@
 		}
 		
 		function save_logiciel() {
-			if ($this->temps==false) $this->temps=date('Y-m-d H-i-s');
+			if ($this->temps==false) $this->temps=date('Y-m-d_H-i-s');
 			$cheminArchive = 'sav/logiciel/';
 			$repertoire = $cheminArchive.$this->temps;
 			if (!file_exists($cheminArchive)){mkdir($cheminArchive, 0777, true);}
@@ -171,12 +171,14 @@
 		}
 
 		function rmdirr($dir) {
-			if($objs = glob($dir."/*")){
-				foreach($objs as $obj) {
-					is_dir($obj)?$this->rmdirr($obj):unlink($obj);
+			if (file_exists($dir)) {
+				if($objs = glob($dir."/*")){
+					foreach($objs as $obj) {
+						is_dir($obj)?$this->rmdirr($obj):unlink($obj);
+					}
 				}
+				rmdir($dir);
 			}
-			rmdir($dir);
 		}
 		
 		function supprimer_all_save() {
@@ -187,6 +189,7 @@
 		function supprimer_save($chemin, $nom){
 			if ($this->save_existe($chemin, $nom)===true) {
 				unlink('sav/'.$chemin.'/'.$nom);
+				return true;
 			}else{
 				return false;
 			}

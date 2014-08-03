@@ -1,4 +1,4 @@
-var update=new Object();
+var update = new Object();
 
 function modifier_parametre() {
 	$("label").each(function(){
@@ -7,8 +7,7 @@ function modifier_parametre() {
 		update[id]=value;
 	});
 
-	var n = noty_confirm("modif_param(update)", "");
-	return false;
+	noty_confirm("modif_param()", '');
 }
 
 function modif_param(){
