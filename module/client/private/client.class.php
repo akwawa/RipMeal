@@ -23,7 +23,7 @@
 			$this->allInfos = $tab;
 		}
 			
-		function lister_clients($id=false) {
+		function liste_clients($id=false) {
 			if (empty($this->namesColumns['client'])) {$this->listerColonnes('client');}
 			$this->__reset();
 			$this->select(array('client' => $this->namesColumns['client']), 'c');
@@ -35,28 +35,45 @@
 			return $this->execute();
 		}
 
-		function lister_numeroTournee($idTournee=false) {
-			if (empty($this->namesColumns['client'])) {$this->listerColonnes('client');}
+		function liste_regimes($id=false, $name=false, $fullname=false, $color=false, $idRemp=false) {
+			if (empty($this->namesColumns['regime'])) {$this->listerColonnes('regime');}
 			$this->__reset();
-			$this->select(array('client' => array('name', 'firstname', 'idTournee', 'numeroTournee')), 'c');
-			$this->order('c', 'numeroTournee');
-
-			if ($idTournee!==false){$this->where(array('c'=>array('idTournee'=>$idTournee)));}
-
+			$this->select(array('regime' => $this->namesColumns['regime']), 'r');
+			
+			if ($id!==false){$this->where(array('r'=>array('id'=>$id)));}
+			if ($name!==false){$this->where(array('r'=>array('name'=>$name)));}
+			if ($fullname!==false){$this->where(array('r'=>array('fullname'=>$fullname)));}
+			if ($color!==false){$this->where(array('r'=>array('color'=>$color)));}
+			if ($idRemp!==false){$this->where(array('r'=>array('idRemp'=>$idRemp)));}
+			
 			// echo $this->buildAll().'<br>';
 			return $this->execute();
 		}
 
-		function lister_tournee($id=false, $name=false, $fullname=false) {
-			$where=false;
-			if ($id!==false){$where['id']=$id;}
-			if ($name!==false){$where['name']=$name;}
-			if ($fullname!==false){$where['fullname']=$fullname;}
-			return $this->fetch('tournee', false, $where, false, false, 't');
+		function liste_tournees($id=false, $name=false, $fullname=false) {
+			$this->__reset();
+			$table='tournee';
+			$alias='t';
+			if (empty($this->namesColumns[$table])) {$this->listerColonnes($table);}
+			$this->select(array($table => $this->namesColumns[$table]), $alias);
+
+			if ($id!==false){$this->where(array($alias=>array('id'=>$id)));}
+			if ($name!==false){$this->where(array($alias=>array('name'=>$name)));}
+			if ($fullname!==false){$this->where(array($alias=>array('fullname'=>$fullname)));}
+
+			return $this->execute();
 		}
 		
-		function lister_rank() {
-			return $this->fetch('rank', array('id', 'name', 'description'), false, false, false, 'r');
+		function modif_tournee($id, $name, $firstname, $sexe, $address, $fulladdress, $zip, $city, $phone, $secondPhone, $pain, $potage, $actif, $info, $AlimentInterdit, $sacPorte, $corbeille) {
+			$this->__reset();
+			$table='tournee';
+			$this->update($table, array('name' => $name, 'firstname' => $firstname, 'sexe' => $sexe, 'address' => $address, 'fulladdress' => $fulladdress, 'zip' => $zip, 'city' => $city, 'phone' => $phone, 'secondPhone' => $secondPhone, 'pain' => $pain, 'potage' => $potage, 'actif' => $actif, 'info' => $info, 'AlimentInterdit' => $AlimentInterdit, 'sacPorte' => $sacPorte, 'corbeille' => $corbeille));
+			$this->where(array($table=>array('id'=>$id)));
+
+			// echo $this->buildAll().'<br>';
+			$this->execute();
+
+			return true;
 		}
 		
 		function fetch($table, $colonne=false, $where=false, $limit=false, $order=false, $alias=false) {

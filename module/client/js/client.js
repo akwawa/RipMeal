@@ -1,7 +1,8 @@
 var compte = new Object();
 
-function modifier_compte(id) {
+function modifier_client(id) {
 	$(document).ready( function () {
+		$("#client-modifier").removeClass("desktop-hidden");
 		$('html,body').animate({scrollTop: $("#client-modifier").offset().top}, 'slow');
 		$('#id').val($('#tr_' + id).data("id"));
 		$('#name').val($('#tr_' + id).data("name"));
@@ -13,16 +14,6 @@ function modifier_compte(id) {
 		$('#city').val($('#tr_' + id).data("city"));
 		$('#phone').val($('#tr_' + id).data("phone"));
 		$('#secondPhone').val($('#tr_' + id).data("secondphone"));
-		$('#idTournee').val($('#tr_' + id).data("idtournee"));
-
-		$('#numeroTournee').append('<option value="0">En premier</option>');
-		var json = jQuery.parseJSON($('#tab_numeroTournee').text());
-		jQuery.each(json[$('#tr_' + id).data("idtournee")], function(i, value) {
-            $('#numeroTournee').append($('<option>').text(value["c.name"]+" "+value["c.firstname"]).attr('value', value["c.numeroTournee"]));
-        });
-        $('#numeroTournee').val($('#tr_' + id).data("numerotournee"));
-
-
 		$('#pain').val($('#tr_' + id).data("pain"));
 		$('#potage').val($('#tr_' + id).data("potage"));
 		$('#actif').val($('#tr_' + id).data("actif"));
@@ -36,6 +27,30 @@ function modifier_compte(id) {
 		$('#ressourceAddress').val($('#tr_' + id).data("ressourceaddress"));
 	});
 }
+
+function valide_modif_client(json){
+	alert('ok');
+	json = JSON.parse(json);
+	alert(json['result']);
+	if(json['result']) {
+		noty_modifSuccess();
+		var id = json['id'];
+
+		// alert(json.length);
+		// for (var i = json.length - 1; i >= 0; i--) {
+			// $('#tr_' + id).data("name", json[i]);
+			// alert(json[i]);
+		// };
+
+		// $('#td_' + id + '_name').text(name);
+		// $('#td_' + id + '_fullname').text(fullname);
+
+		$("#client-modifier").addClass("desktop-hidden");
+	} else {
+		noty_modifError();
+	}
+}
+
 
 // function modifier_compte(id) {
 // 	outerHTML = '<div id="chargement">Chargement en cours</div>';
@@ -62,18 +77,9 @@ function modifier_compte(id) {
 // 	return false;
 // }
 
-function modifier_compte_valider(element){
-	var id=element.getAttribute("data-id");
-	var login=element.getAttribute("data-id");
-	var id=element.getAttribute("data-id");
-	
-	alert(id);
-	return false;
-}
-
 function action(element) {
 	var id=$(element).attr("data-id");
-	noty_action("modifier_compte("+id+");", "supprimer_compte("+id+");", "");
+	noty_action("modifier_client("+id+");", "supprimer_client("+id+");", "");
 
 	return false;
 }

@@ -6,7 +6,7 @@ SetEnv MAGIC_QUOTES 0
 
 Options All +FollowSymLinks -Indexes
 RewriteEngine On
-RewriteBase /infomage/ripmeal/v3.00
+RewriteBase /infomage/ripmeal/v_git/RipMeal/
 
 # Passage en https toutes les urls
 RewriteCond %{SERVER_PORT} !^443$
